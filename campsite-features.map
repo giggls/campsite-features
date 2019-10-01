@@ -17,6 +17,7 @@ MAP
       "wms_title"           "campsite_features"
       "wms_onlineresource"  "http://opencampingmap.org/camping-feature/"
       "ows_srs"             "epsg:3857"
+      "tile_map_edge_buffer" "60"
     END
   END
 
