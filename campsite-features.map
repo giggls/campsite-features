@@ -1,0 +1,221 @@
+MAP
+  CONFIG "MS_ERRORFILE" stderr
+  FONTSET /osm/camping/campsite-features/notofonts.lst
+  DEBUG 0
+
+  # transparent background
+  OUTPUTFORMAT
+    NAME agg
+    DRIVER AGG/PNG8
+    MIMETYPE "image/png"
+    IMAGEMODE RGBA
+  END
+
+  WEB
+    METADATA
+      "ows_enable_request" "*"
+      "wms_title"           "campsite_features"
+      "wms_onlineresource"  "http://opencampingmap.org/camping-feature/"
+      "ows_srs"             "epsg:3857"
+    END
+  END
+
+  IMAGECOLOR "#FFFFFF"
+
+  PROJECTION
+    "init=epsg:3857"
+  END
+
+  SYMBOL
+    NAME "circle"
+    TYPE ELLIPSE
+    POINTS 20 20 END
+    FILLED TRUE  
+  END
+  SYMBOL
+    NAME "power_supply"
+    TYPE svg
+    IMAGE "feature-icons/power_supply.svg"
+  END
+
+  LAYER
+    TYPE POLYGON
+    STATUS ON
+    NAME "camp_pitch_poly"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 2500 # Z18
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    LABELITEM "ref"
+    DATA "geom from (
+    SELECT
+    geom,
+    osm_id,
+    tags->'ref' as ref,
+    tags->'permanent_camping' as permanent_camping,
+    tags->'tents' as tents,
+    tags->'caravans' as caravans
+    FROM osm_poi_poly where Tags -> 'tourism' = 'camp_pitch'
+    ) as foo using unique osm_id using srid=4326"
+    PROCESSING "LABEL_NO_CLIP=True CLOSE_CONNECTION=DEFER"
+    CLASS
+        EXPRESSION ('[permanent_camping]' IN "yes,only")
+        STYLE
+          OUTLINECOLOR "#808080"
+          WIDTH 0.5
+          COLOR "#c7ddc6"
+        END
+        LABEL
+          TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+          SIZE 7
+          COLOR "#2f2f2f"
+          WRAP ' '
+          ALIGN CENTER
+          FORCE true
+          POSITION cc
+        END
+    END
+    CLASS
+        EXPRESSION (('[tents]' = 'yes') AND ('[caravans]' = 'no'))
+        STYLE
+          OUTLINECOLOR "#808080"
+          WIDTH 0.5
+          COLOR "#e1ddac"
+        END
+        LABEL
+          TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+          SIZE 7
+          COLOR "#2f2f2f"
+          WRAP ' '
+          ALIGN CENTER
+          FORCE true
+          POSITION cc
+        END
+    END
+    CLASS
+        EXPRESSION (NOT (('[permanent_camping]' IN "yes,only") OR (('[tents]' = 'yes') AND ('[caravans]' = 'no'))))
+        STYLE
+          OUTLINECOLOR "#808080"
+          WIDTH 0.5
+          COLOR "#c7f7ac"
+        END
+        LABEL
+          TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+          SIZE 7
+          COLOR "#2f2f2f"
+          WRAP ' '
+          ALIGN CENTER
+          FORCE true
+          POSITION cc
+        END
+    END
+  END
+  LAYER
+    TYPE POINT
+    STATUS ON
+    NAME "camp_pitch_point"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 2500 # Z18
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    LABELITEM "ref"
+    DATA "geom from (
+    SELECT
+    geom,
+    osm_id,
+    tags->'ref' as ref,
+    tags->'permanent_camping' as permanent_camping,
+    tags->'tents' as tents,
+    tags->'caravans' as caravans
+    FROM osm_poi_point where Tags -> 'tourism' = 'camp_pitch'
+    ) as foo using unique osm_id using srid=4326"
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+    CLASS
+       EXPRESSION ('[permanent_camping]' IN "yes,only")
+       STYLE
+         SYMBOL "circle"
+         OUTLINECOLOR "#808080"
+         OUTLINEWIDTH 0.5
+         COLOR "#c7ddc6"
+       END
+       LABEL
+         TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+         SIZE 7
+         COLOR "#2f2f2f"
+         WRAP ' '
+         ALIGN CENTER
+         POSITION cc
+         FORCE true
+       END
+    END
+    CLASS           
+       EXPRESSION (('[tents]' = 'yes') AND ('[caravans]' = 'no'))
+       STYLE        
+         SYMBOL "circle"
+         OUTLINECOLOR "#808080"                                                                                                                                                                                                    
+         OUTLINEWIDTH 0.5                                                                                                                                                                                                         
+         COLOR "#e1ddac"
+       END
+       LABEL
+         TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+         SIZE 7
+         COLOR "#2f2f2f"
+         WRAP ' '
+         ALIGN CENTER
+         POSITION cc
+         FORCE true
+       END
+    END
+    CLASS           
+       EXPRESSION (NOT (('[permanent_camping]' IN "yes,only") OR (('[tents]' = 'yes') AND ('[caravans]' = 'no'))))
+       STYLE        
+         SYMBOL "circle"
+         OUTLINECOLOR "#808080"                                                                                                                                                                                                   
+         OUTLINEWIDTH 0.5                                                                                                                                                                                                         
+         COLOR "#c7f7ac"
+       END
+       LABEL
+         TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+         SIZE 7
+         COLOR "#2f2f2f"
+         WRAP ' '
+         ALIGN CENTER
+         POSITION cc
+         FORCE true
+       END
+    END
+  END
+
+  # power supply POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "power_supply"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where Tags -> 'amenity' = 'power_supply') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "power_supply"
+        OUTLINEWIDTH 0
+        SIZE 20
+      END
+    END
+  END
+END
