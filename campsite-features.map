@@ -61,7 +61,7 @@ MAP
     SELECT
     geom,
     osm_id,
-    tags->'ref' as ref,
+    COALESCE(tags->'ref',tags->'name') as ref,
     tags->'permanent_camping' as permanent_camping,
     tags->'tents' as tents,
     tags->'caravans' as caravans
@@ -137,7 +137,7 @@ MAP
     SELECT
     geom,
     osm_id,
-    tags->'ref' as ref,
+    COALESCE(tags->'ref',tags->'name') as ref,
     tags->'permanent_camping' as permanent_camping,
     tags->'tents' as tents,
     tags->'caravans' as caravans
