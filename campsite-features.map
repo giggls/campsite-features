@@ -38,6 +38,11 @@ MAP
     TYPE svg
     IMAGE "feature-icons/power_supply.svg"
   END
+  SYMBOL
+    NAME "fire_extinguisher"
+    TYPE svg
+    IMAGE "feature-icons/fire_extinguisher.svg"
+  END
 
   LAYER
     TYPE POLYGON
@@ -215,8 +220,34 @@ MAP
       STYLE
         SYMBOL "power_supply"
         OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+  END
+
+  # fire extinguisher POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "fire_extinguisher"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where Tags -> 'emergency' = 'fire_extinguisher') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "fire_extinguisher"
+        OUTLINEWIDTH 0
         SIZE 20
       END
     END
   END
+
 END
