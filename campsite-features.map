@@ -61,7 +61,7 @@ MAP
     SELECT
     geom,
     osm_id,
-    COALESCE(tags->'ref',tags->'name') as ref,
+    tags->'ref' as ref,
     tags->'permanent_camping' as permanent_camping,
     tags->'tents' as tents,
     tags->'caravans' as caravans
@@ -76,7 +76,7 @@ MAP
           COLOR "#c7ddc6"
         END
         LABEL
-          TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+          TYPE TRUETYPE FONT nosans PARTIALS FALSE OUTLINEWIDTH 2
           SIZE 7
           COLOR "#2f2f2f"
           WRAP ' '
@@ -93,7 +93,7 @@ MAP
           COLOR "#e1ddac"
         END
         LABEL
-          TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+          TYPE TRUETYPE FONT nosans PARTIALS FALSE OUTLINEWIDTH 2
           SIZE 7
           COLOR "#2f2f2f"
           WRAP ' '
@@ -110,7 +110,7 @@ MAP
           COLOR "#c7f7ac"
         END
         LABEL
-          TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+          TYPE TRUETYPE FONT nosans PARTIALS FALSE OUTLINEWIDTH 2
           SIZE 7
           COLOR "#2f2f2f"
           WRAP ' '
@@ -137,7 +137,7 @@ MAP
     SELECT
     geom,
     osm_id,
-    COALESCE(tags->'ref',tags->'name') as ref,
+    tags->'ref' as ref,
     tags->'permanent_camping' as permanent_camping,
     tags->'tents' as tents,
     tags->'caravans' as caravans
@@ -153,7 +153,7 @@ MAP
          COLOR "#c7ddc6"
        END
        LABEL
-         TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+         TYPE TRUETYPE FONT nosans PARTIALS FALSE OUTLINEWIDTH 2
          SIZE 7
          COLOR "#2f2f2f"
          WRAP ' '
@@ -171,7 +171,7 @@ MAP
          COLOR "#e1ddac"
        END
        LABEL
-         TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+         TYPE TRUETYPE FONT nosans PARTIALS FALSE OUTLINEWIDTH 2
          SIZE 7
          COLOR "#2f2f2f"
          WRAP ' '
@@ -189,10 +189,48 @@ MAP
          COLOR "#c7f7ac"
        END
        LABEL
-         TYPE TRUETYPE FONT noto PARTIALS FALSE OUTLINEWIDTH 2
+         TYPE TRUETYPE FONT nosans PARTIALS FALSE OUTLINEWIDTH 2
          SIZE 7
          COLOR "#2f2f2f"
          WRAP ' '
+         ALIGN CENTER
+         POSITION cc
+         FORCE true
+       END
+    END
+  END
+
+  # reception POI
+  LAYER
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS meters
+    NAME "reception"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    #MAXSCALEDENOM 1250 # Z19
+    MAXSCALEDENOM 2500 # Z18
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT ST_centroid(geom) as geom,osm_id FROM osm_poi_all
+    WHERE
+    ((tags -> 'camp_site' = 'reception') OR (tags -> 'amenity' = 'reception_desk'))
+    AND geom && !BOX!) as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "circle"
+        OUTLINEWIDTH 0
+        SIZE 14
+        COLOR '#ff0000'
+      END
+       LABEL
+         TEXT 'i'
+         TYPE TRUETYPE FONT noserifb PARTIALS FALSE OUTLINEWIDTH 0
+         SIZE 10
+         COLOR "#ffffff"
          ALIGN CENTER
          POSITION cc
          FORCE true
