@@ -9,7 +9,16 @@ MAP
     DRIVER AGG/PNG8
     MIMETYPE "image/png"
     IMAGEMODE RGBA
+    EXTENSION "png"
   END
+
+   OUTPUTFORMAT
+     NAME "svg"
+     DRIVER CAIRO/SVG
+     MIMETYPE "image/svg+xml"
+     IMAGEMODE RGB
+     EXTENSION "svg"
+   END
 
   WEB
     METADATA
