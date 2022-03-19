@@ -4,7 +4,7 @@ all:
 
 test: test-camp-pitch-18.png test-camp-pitch-pt-18.png test-camp-pitch-19.png
 
-svg: out1.svg
+svg: out1.svg out2.svg
 
 test-camp-pitch-18.png: campsite-features.map
 	shp2img  -m campsite-features.map -e 894007.482823 6215094.769868 894313.230937 6215247.643924 -s 512 256 >$@
@@ -22,6 +22,8 @@ test-camp-pitch-pt-18.png: campsite-features.map
 out1.svg:
 	shp2img -i svg -m campsite-features.map -e 1237974.110107 6346872.206631 1238050.547135 6346948.643660 -s 256 256 >$@
 
+out2.svg:
+	shp2img -i svg -m campsite-features.map -e 894466.104993 6214941.895811 894618.979050 6215094.769868 -s 256 256 >$@
 
 clean:
 	rm test-*.png	
