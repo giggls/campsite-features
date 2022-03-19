@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="10"
+   height="10"
+   viewBox="0 0 10 10"
+   id="svg4">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <rect
+     width="14"
+     height="14"
+     x="0"
+     y="0"
+     id="canvas"
+     style="visibility:hidden;fill:none;stroke:none" />
+  <path
+     d="M 1,4.2857143 2.0714286,9.9999999 H 5.6428571 L 6.7142857,4.2857143 Z M 1.8428571,5 H 5.8642857 L 5.6,6.4285714 H 2.1071429 M 3.1428571,3.5714285 c 0,-1.4285714 0.7142857,-2.1428571 2.1428572,-2.1428571 H 6 V 0.71428571 H 5.2857143 C 4.5714285,0.71428571 4.5714285,0 5.2857143,0 h 2.1428571 c 0.7142857,0 0.7142857,0.71428571 0,0.71428571 H 6.7142857 V 1.4285714 H 9.5714285 V 2.5 H 5.2857143 C 4.5109,2.49365 4.2142857,2.8446261 4.2142857,3.5714285 Z"
+     id="drinking-water"
+     style="stroke-width:1" />
+</svg>

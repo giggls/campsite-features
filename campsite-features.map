@@ -52,6 +52,16 @@ MAP
     TYPE svg
     IMAGE "feature-icons/fire_extinguisher.svg"
   END
+  SYMBOL
+    NAME "drinking_water"
+    TYPE svg
+    IMAGE "feature-icons/drinking_water.svg"
+  END
+  SYMBOL
+    NAME "sanitary_dump_station"
+    TYPE svg
+    IMAGE "feature-icons/sanitary_dump_station.svg"
+  END
 
   LAYER
     TYPE POLYGON
@@ -296,5 +306,57 @@ MAP
       END
     END
   END
+
+  # water_point/drinking_water POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "fire_extinguisher"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((Tags -> 'amenity' = 'water_point') OR (Tags -> 'amenity' = 'drinking_water'))) as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "drinking_water"
+        OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+  END
+
+  # sanitary dump station POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "fire_extinguisher"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where Tags -> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "sanitary_dump_station"
+        OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+  END
+
+
 
 END
