@@ -62,6 +62,11 @@ MAP
     TYPE svg
     IMAGE "feature-icons/sanitary_dump_station.svg"
   END
+  SYMBOL
+    NAME "reception_desk"
+    TYPE svg
+    IMAGE "feature-icons/reception_desk.svg"
+  END
 
   LAYER
     TYPE POLYGON
@@ -240,20 +245,10 @@ MAP
     AND geom && !BOX!) as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
-        SYMBOL "circle"
+        SYMBOL "reception_desk"
         OUTLINEWIDTH 0
-        SIZE 14
-        COLOR '#ff0000'
+        SIZE 20
       END
-       LABEL
-         TEXT 'i'
-         TYPE TRUETYPE FONT noserifb PARTIALS FALSE OUTLINEWIDTH 0
-         SIZE 10
-         COLOR "#ffffff"
-         ALIGN CENTER
-         POSITION cc
-         FORCE true
-       END
     END
   END
 
