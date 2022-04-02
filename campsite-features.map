@@ -63,6 +63,16 @@ MAP
     IMAGE "feature-icons/sanitary_dump_station.svg"
   END
   SYMBOL
+    NAME "toilets"
+    TYPE svg
+    IMAGE "feature-icons/toilets.svg"
+  END
+  SYMBOL
+    NAME "shower"
+    TYPE svg
+    IMAGE "feature-icons/shower.svg"
+  END
+  SYMBOL
     NAME "reception_desk"
     TYPE svg
     IMAGE "feature-icons/reception_desk.svg"
@@ -89,7 +99,7 @@ MAP
     tags->'permanent_camping' as permanent_camping,
     tags->'tents' as tents,
     tags->'caravans' as caravans
-    FROM osm_poi_poly where Tags -> 'tourism' = 'camp_pitch'
+    FROM osm_poi_poly where tags -> 'tourism' = 'camp_pitch'
     ) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=True CLOSE_CONNECTION=DEFER"
     CLASS
@@ -165,7 +175,7 @@ MAP
     tags->'permanent_camping' as permanent_camping,
     tags->'tents' as tents,
     tags->'caravans' as caravans
-    FROM osm_poi_point where Tags -> 'tourism' = 'camp_pitch'
+    FROM osm_poi_point where tags -> 'tourism' = 'camp_pitch'
     ) as foo using unique osm_id using srid=4326"
     PROCESSING "CLOSE_CONNECTION=DEFER"
     CLASS
@@ -239,7 +249,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT ST_centroid(geom) as geom,osm_id FROM osm_poi_all
+    DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id FROM osm_poi_all
     WHERE
     ((tags -> 'camp_site' = 'reception') OR (tags -> 'amenity' = 'reception_desk'))
     AND geom && !BOX!) as foo using unique osm_id using srid=4326"
@@ -267,7 +277,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where Tags -> 'amenity' = 'power_supply') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'power_supply') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "power_supply"
@@ -292,7 +302,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where Tags -> 'emergency' = 'fire_extinguisher') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'emergency' = 'fire_extinguisher') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "fire_extinguisher"
@@ -317,7 +327,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((Tags -> 'amenity' = 'water_point') OR (Tags -> 'amenity' = 'drinking_water'))) as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((tags -> 'amenity' = 'water_point') OR (tags -> 'amenity' = 'drinking_water'))) as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "drinking_water"
@@ -332,7 +342,6 @@ MAP
     SIZEUNITS pixels
     TYPE POINT
     STATUS ON
-    SIZEUNITS pixels
     NAME "fire_extinguisher"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
@@ -342,7 +351,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where Tags -> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "sanitary_dump_station"
@@ -352,6 +361,76 @@ MAP
     END
   END
 
+  # toilet (+shower) POI
+  LAYER
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "reception"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id,CASE WHEN (tags->'shower' = 'no') OR (tags->'shower' is NULL) THEN 'no' ELSE 'yes' END shower FROM osm_poi_all
+    WHERE (tags -> 'amenity' = 'toilets')
+    AND geom && !BOX!) as foo using unique osm_id using srid=4326"
+    # toilets including shower
+    CLASS
+      EXPRESSION ('[shower]'='yes')
+      STYLE
+        SYMBOL "toilets"
+        OUTLINEWIDTH 0
+	# seem to need this offset to match position form Mapnik OSM rendering
+	OFFSET 1 0
+      END
+      STYLE
+        SYMBOL "shower"
+        OUTLINEWIDTH 0
+	# seem to need this offset to match position form Mapnik OSM rendering
+	OFFSET 21 0
+      END
+    END
+    # toilets without shower
+    CLASS
+      EXPRESSION ('[shower]'='no')
+      STYLE
+        SYMBOL "toilets"
+        OUTLINEWIDTH 0
+        # seem to need this offset to match position form Mapnik OSM rendering
+        OFFSET 1 0
+      END         
+    END
+  END
 
+  # shower POI
+  LAYER
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "reception"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id FROM osm_poi_all
+    WHERE (tags -> 'amenity' = 'shower')
+    AND geom && !BOX!) as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "shower"
+        OUTLINEWIDTH 0
+	# seem to need this offset to match position form Mapnik OSM rendering
+	OFFSET 1 0
+      END
+    END
+  END
 
 END
