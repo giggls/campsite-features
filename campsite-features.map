@@ -58,6 +58,16 @@ MAP
     IMAGE "feature-icons/drinking_water.svg"
   END
   SYMBOL
+    NAME "picnic"
+    TYPE svg
+    IMAGE "feature-icons/picnic.svg"
+  END
+  SYMBOL
+    NAME "bench"
+    TYPE svg
+    IMAGE "feature-icons/bench.svg"
+  END
+  SYMBOL
     NAME "sanitary_dump_station"
     TYPE svg
     IMAGE "feature-icons/sanitary_dump_station.svg"
@@ -342,7 +352,7 @@ MAP
     SIZEUNITS pixels
     TYPE POINT
     STATUS ON
-    NAME "fire_extinguisher"
+    NAME "sanitary_dump_station"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
     CONNECTION "dbname=poi"
@@ -356,6 +366,58 @@ MAP
       STYLE
         SYMBOL "sanitary_dump_station"
         OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+  END
+
+  # leisure = picnic_table POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    NAME "picnic_table"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 2500 # Z18
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'leisure' = 'picnic_table') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "picnic"
+        OUTLINEWIDTH 0
+	# seem to need this offset to match position form Mapnik OSM rendering
+	OFFSET 1 0
+        SIZE 16
+      END
+    END
+  END
+
+  # amenity = bench POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    NAME "bench"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'bench') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "bench"
+        OUTLINEWIDTH 0
+	# seem to need this offset to match position form Mapnik OSM rendering
+	OFFSET 1 0
         SIZE 16
       END
     END
