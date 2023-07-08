@@ -347,7 +347,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((tags -> 'amenity' = 'water_point') OR (tags -> 'amenity' = 'drinking_water'))) as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((tags -> 'amenity' = 'water_point') OR (tags -> 'amenity' = 'drinking_water') OR ((tags -> 'man_made' = 'water_tap') AND (tags -> 'drinking_water' = 'yes')))) as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "drinking_water"
