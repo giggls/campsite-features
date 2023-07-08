@@ -83,6 +83,16 @@ MAP
     IMAGE "feature-icons/shower.svg"
   END
   SYMBOL
+    NAME "kitchen"
+    TYPE svg
+    IMAGE "feature-icons/kitchen.svg"
+  END
+  SYMBOL
+    NAME "sink"
+    TYPE svg
+    IMAGE "feature-icons/sink.svg"
+  END
+  SYMBOL
     NAME "reception_desk"
     TYPE svg
     IMAGE "feature-icons/reception_desk.svg"
@@ -491,6 +501,56 @@ MAP
         OUTLINEWIDTH 0
 	# seem to need this offset to match position form Mapnik OSM rendering
 	OFFSET 1 0
+      END
+    END
+  END
+
+  # kitchen POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "kitchen"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'kitchen') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "kitchen"
+        OUTLINEWIDTH 0
+        SIZE 20
+      END
+    END
+  END
+
+  # kitchen sink POI
+  LAYER
+    SIZEUNITS pixels
+    TYPE POINT
+    STATUS ON
+    SIZEUNITS pixels
+    NAME "kitchen_sink"
+    GROUP "default"
+    CONNECTIONTYPE POSTGIS
+    CONNECTION "dbname=poi"
+    MAXSCALEDENOM 1250 # Z19
+    # We need this to tell mapserver, that the database uses epsg:4326
+    PROJECTION
+      "init=epsg:4326"
+    END
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'sink') as foo using unique osm_id using srid=4326"
+    CLASS
+      STYLE
+        SYMBOL "sink"
+        OUTLINEWIDTH 0
+        SIZE 20
       END
     END
   END
