@@ -1,4 +1,5 @@
 nosans /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf
+nosansb /usr/share/fonts/truetype/noto/NotoSans-Bold.ttf
 noserif /usr/share/fonts/truetype/noto/NotoSerif-Regular.ttf
 noserifb /usr/share/fonts/truetype/noto/NotoSerif-Bold.ttf
 

@@ -115,11 +115,11 @@ MAP
     SELECT
     geom,
     osm_id,
-    COALESCE(tags->'ref',tags->'name') as ref,
-    tags->'permanent_camping' as permanent_camping,
-    tags->'tents' as tents,
-    tags->'caravans' as caravans
-    FROM osm_poi_poly where tags -> 'tourism' = 'camp_pitch'
+    COALESCE(tags->>'ref',tags->>'name') as ref,
+    tags->>'permanent_camping' as permanent_camping,
+    tags->>'tents' as tents,
+    tags->>'caravans' as caravans
+    FROM osm_poi_poly where tags ->> 'tourism' = 'camp_pitch'
     ) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=True CLOSE_CONNECTION=DEFER"
     CLASS
@@ -191,11 +191,11 @@ MAP
     SELECT
     geom,
     osm_id,
-    COALESCE(tags->'ref',tags->'name') as ref,
-    tags->'permanent_camping' as permanent_camping,
-    tags->'tents' as tents,
-    tags->'caravans' as caravans
-    FROM osm_poi_point where tags -> 'tourism' = 'camp_pitch'
+    COALESCE(tags->>'ref',tags->>'name') as ref,
+    tags->>'permanent_camping' as permanent_camping,
+    tags->>'tents' as tents,
+    tags->>'caravans' as caravans
+    FROM osm_poi_point where tags ->> 'tourism' = 'camp_pitch'
     ) as foo using unique osm_id using srid=4326"
     PROCESSING "CLOSE_CONNECTION=DEFER"
     CLASS
@@ -271,7 +271,7 @@ MAP
     END
     DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id FROM osm_poi_all
     WHERE
-    ((tags -> 'camp_site' = 'reception') OR (tags -> 'amenity' = 'reception_desk'))
+    ((tags ->> 'camp_site' = 'reception') OR (tags ->> 'amenity' = 'reception_desk'))
     AND geom && !BOX!) as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
@@ -297,7 +297,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'power_supply') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'amenity' = 'power_supply') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "power_supply"
@@ -322,7 +322,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'emergency' = 'fire_extinguisher') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'emergency' = 'fire_extinguisher') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "fire_extinguisher"
@@ -347,7 +347,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((tags -> 'amenity' = 'water_point') OR (tags -> 'amenity' = 'drinking_water') OR ((tags -> 'man_made' = 'water_tap') AND (tags -> 'drinking_water' = 'yes')))) as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where ((tags ->> 'amenity' = 'water_point') OR (tags ->> 'amenity' = 'drinking_water') OR ((tags ->> 'man_made' = 'water_tap') AND (tags ->> 'drinking_water' = 'yes')))) as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "drinking_water"
@@ -371,7 +371,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "sanitary_dump_station"
@@ -395,7 +395,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'leisure' = 'picnic_table') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'leisure' = 'picnic_table') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "picnic"
@@ -421,7 +421,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'bench') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'amenity' = 'bench') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "bench"
@@ -447,8 +447,8 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id,CASE WHEN (tags->'shower' = 'no') OR (tags->'shower' is NULL) THEN 'no' ELSE 'yes' END shower FROM osm_poi_all
-    WHERE (tags -> 'amenity' = 'toilets')
+    DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id,CASE WHEN (tags->>'shower' = 'no') OR (tags->>'shower' is NULL) THEN 'no' ELSE 'yes' END shower FROM osm_poi_all
+    WHERE (tags ->> 'amenity' = 'toilets')
     AND geom && !BOX!) as foo using unique osm_id using srid=4326"
     # toilets including shower
     CLASS
@@ -493,7 +493,7 @@ MAP
       "init=epsg:4326"
     END
     DATA "geom from ( SELECT ST_PointOnSurface(geom) as geom,osm_id FROM osm_poi_all
-    WHERE (tags -> 'amenity' = 'shower')
+    WHERE (tags ->> 'amenity' = 'shower')
     AND geom && !BOX!) as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
@@ -520,7 +520,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'kitchen') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'amenity' = 'kitchen') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "kitchen"
@@ -545,7 +545,7 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags -> 'amenity' = 'sink') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'amenity' = 'sink') as foo using unique osm_id using srid=4326"
     CLASS
       STYLE
         SYMBOL "sink"
