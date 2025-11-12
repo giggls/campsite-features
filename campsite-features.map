@@ -381,7 +381,7 @@ MAP
     GROUP "default"
     CONNECTIONTYPE POSTGIS
     CONNECTION "dbname=poi"
-    MAXSCALEDENOM 1250 # Z19
+    MAXSCALEDENOM 2500 # Z18
     # We need this to tell mapserver, that the database uses epsg:4326
     PROJECTION
       "init=epsg:4326"
@@ -392,7 +392,7 @@ MAP
       STYLE
         SYMBOL "sanitary_dump_station"
         OUTLINEWIDTH 0
-        SIZE 16
+        SIZE 20
       END
     END
     CLASS
@@ -400,7 +400,7 @@ MAP
       STYLE
         SYMBOL "sds_grey_water_and_chem_toilet"
         OUTLINEWIDTH 0
-        SIZE 16
+        SIZE 20
       END
     END
     CLASS
@@ -408,7 +408,7 @@ MAP
       STYLE
         SYMBOL "sds_grey_water"
         OUTLINEWIDTH 0
-        SIZE 16
+        SIZE 20
       END
     END
     CLASS
@@ -416,7 +416,7 @@ MAP
       STYLE
         SYMBOL "sds_chem_toilet"
         OUTLINEWIDTH 0
-        SIZE 16
+        SIZE 20
       END
     END
   END
