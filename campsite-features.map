@@ -73,6 +73,21 @@ MAP
     IMAGE "feature-icons/sanitary_dump_station.svg"
   END
   SYMBOL
+    NAME "sds_grey_water_and_chem_toilet"
+    TYPE svg
+    IMAGE "feature-icons/sds_grey_water_and_chem_toilet.svg"
+  END
+  SYMBOL
+    NAME "sds_grey_water"
+    TYPE svg
+    IMAGE "feature-icons/sds_grey_water.svg"
+  END
+  SYMBOL
+    NAME "sds_chem_toilet"
+    TYPE svg
+    IMAGE "feature-icons/sds_chem_toilet.svg"
+  END
+  SYMBOL
     NAME "toilets"
     TYPE svg
     IMAGE "feature-icons/toilets.svg"
@@ -371,10 +386,35 @@ MAP
     PROJECTION
       "init=epsg:4326"
     END
-    DATA "geom from ( SELECT geom,osm_id FROM osm_poi_point where tags ->> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
+    DATA "geom from ( SELECT geom,osm_id, COALESCE(tags ->> 'sanitary_dump_station:grey_water','unknown') as grey_water , COALESCE(tags ->> 'sanitary_dump_station:chemical_toilet','unknown') as chemical_toilet FROM osm_poi_point where tags ->> 'amenity' = 'sanitary_dump_station') as foo using unique osm_id using srid=4326"
     CLASS
+      EXPRESSION (('[grey_water]' = 'unknown') AND ('[chemical_toilet]' = 'unknown'))
       STYLE
         SYMBOL "sanitary_dump_station"
+        OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+    CLASS
+      EXPRESSION (('[grey_water]' = 'yes') AND ('[chemical_toilet]' = 'yes'))
+      STYLE
+        SYMBOL "sds_grey_water_and_chem_toilet"
+        OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+    CLASS
+      EXPRESSION (('[grey_water]' = 'yes') AND ('[chemical_toilet]' != 'yes'))
+      STYLE
+        SYMBOL "sds_grey_water"
+        OUTLINEWIDTH 0
+        SIZE 16
+      END
+    END
+    CLASS
+      EXPRESSION (('[grey_water]' != 'yes') AND ('[chemical_toilet]' = 'yes'))
+      STYLE
+        SYMBOL "sds_chem_toilet"
         OUTLINEWIDTH 0
         SIZE 16
       END
